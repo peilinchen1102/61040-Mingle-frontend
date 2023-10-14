@@ -1,6 +1,11 @@
-import { User } from "./app";
+import { ObjectId } from "mongodb";
+import { Group, GroupMessage, User } from "./app";
 import { AlreadyFriendsError, FriendNotFoundError, FriendRequestAlreadyExistsError, FriendRequestDoc, FriendRequestNotFoundError } from "./concepts/friend";
+import { GroupDoc } from "./concepts/group";
+import { MessageDoc } from "./concepts/message";
 import { PostAuthorNotMatchError, PostDoc } from "./concepts/post";
+import { ProfileDoc } from "./concepts/profile";
+import { GroupTaskDoc, TaskDoc } from "./concepts/task";
 import { Router } from "./framework/router";
 
 /**
@@ -36,6 +41,97 @@ export default class Responses {
     const to = requests.map((request) => request.to);
     const usernames = await User.idsToUsernames(from.concat(to));
     return requests.map((request, i) => ({ ...request, from: usernames[i], to: usernames[i + requests.length] }));
+  }
+
+  /**
+   * Convert FriendDoc into more readable format for the frontend
+   * by converting the ids into usernames.
+   */
+  static async friends(friends: ObjectId[]) {
+    const usernames = await User.idsToUsernames(friends);
+    return usernames;
+  }
+
+  /**
+   * Convert ProfileDoc into more readable format for the frontend
+   * by converting the ids into usernames.
+   */
+  static async profile(profile: ProfileDoc) {
+    const username = await User.idsToUsernames([profile.owner]);
+    return { ...profile, owner: username[0] };
+  }
+
+  /**
+   * Same as {@link profile} but for an array of Profile for improved performance.
+   */
+  static async profiles(profiles: (ProfileDoc | null)[]) {
+    if (!profiles || profiles[0] === null) {
+      return [];
+    }
+    const usernames = await User.idsToUsernames(profiles.map((profile) => (profile as ProfileDoc).owner));
+    return profiles.map((profile, i) => ({ ...profile, owner: usernames[i] }));
+  }
+
+  /**
+   * Convert GroupDoc into more readable format for the frontend
+   * by converting the ids into usernames.
+   */
+  static async groups(groups: GroupDoc[]) {
+    if (!groups) {
+      return groups;
+    }
+    const usernames = await User.idsToUsernames(groups.map((group) => group.owner));
+    const members = await Promise.all(groups.map(async (group) => await User.idsToUsernames(group.members)));
+    const messages = await Promise.all(groups.map(async (group) => await GroupMessage.getMessagesByIds(group.messages)));
+    const messagesWithUsernames = await Promise.all(messages.map(async (message) => await this.groupMessages(message)));
+    return groups.map((group, i) => ({ ...group, owner: usernames[i], members: members[i], messages: messagesWithUsernames[i] }));
+  }
+
+  /**
+   * Convert MessageDoc into more readable format for the frontend
+   * by converting the ids into usernames.
+   */
+  static async messages(messages: MessageDoc[]) {
+    const from = messages.map((msg) => msg.from);
+    const to = messages.map((msg) => msg.to);
+    const usernames = await User.idsToUsernames(from.concat(to));
+    return messages.map((msg, i) => ({ ...msg, from: usernames[i], to: usernames[i + messages.length] }));
+  }
+
+  /**
+   * Convert MessageDoc into more readable format for the frontend
+   * by converting the user ids into usernames and group ids to group names.
+   */
+  static async groupMessages(messages: MessageDoc[]) {
+    const from = messages.map((msg) => msg.from);
+    const to = messages.map((msg) => msg.to);
+    const usernames = await User.idsToUsernames(from);
+    const groupNames = await Group.getGroupNameByIds(to);
+    return messages.map((msg, i) => ({ ...msg, from: usernames[i], to: groupNames[i] }));
+  }
+
+  /**
+   * Convert TaskDoc or GroupDoc into more readable format for the frontend
+   * by converting the ids into usernames and group ids into group names.
+   */
+  static async tasks(tasks: TaskDoc[] | GroupTaskDoc[]) {
+    if (!tasks) {
+      return [];
+    }
+    const usernames = await User.idsToUsernames(tasks.map((task) => task.assigned));
+    let groupTask = false;
+
+    for (const key in tasks) {
+      if (key === "group") {
+        groupTask = true;
+      }
+    }
+    if (groupTask) {
+      const groupNames = await Group.getGroupNameByIds(tasks.map((task) => (task as GroupTaskDoc).group));
+      return tasks.map((task, i) => ({ ...task, assigned: usernames[i], group: groupNames[i] }));
+    } else {
+      return tasks.map((task, i) => ({ ...task, assigned: usernames[i] }));
+    }
   }
 }
 
