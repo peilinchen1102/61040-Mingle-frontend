@@ -5,13 +5,11 @@ import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
 import EditProfileForm from "./EditProfileForm.vue";
 
-const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
+const { currentUsername } = storeToRefs(useUserStore());
 
 const loaded = ref(false);
-const emit = defineEmits(["editProfile"]);
 
 let profile = ref();
-let editing = ref("");
 
 const colors = ["#fbf8cc", "#fde4cf", "#ffcfd2", "#f1c0e8", "#cfbaf0", "#a3c4f3", "#8eecf5", "#98f5e1", "#b9fbc0"];
 
@@ -23,10 +21,6 @@ async function getProfile(username: string) {
     return;
   }
   profile.value = profileResult;
-}
-
-function updateEditing(id: string) {
-  editing.value = id;
 }
 
 onBeforeMount(async () => {

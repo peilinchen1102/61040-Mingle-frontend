@@ -4,7 +4,6 @@ import { BodyT, fetchy } from "../../utils/fetchy";
 
 const props = defineProps(["profile"]);
 const newProfile = ref({ name: props.profile.name, major: props.profile.major, year: props.profile.year });
-const courses = ref(props.profile.courses);
 const newCourses: Ref<Array<string>> = ref([]);
 
 for (const course of props.profile.courses) {
@@ -79,6 +78,10 @@ form {
   display: flex;
   flex-direction: column;
   gap: 0.5em;
+}
+
+input {
+  align-content: center;
 }
 
 textarea {
