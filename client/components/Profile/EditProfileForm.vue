@@ -1,0 +1,113 @@
+<script setup lang="ts">
+import { Ref, ref } from "vue";
+import { BodyT, fetchy } from "../../utils/fetchy";
+
+const props = defineProps(["profile"]);
+const newProfile = ref({ name: props.profile.name, major: props.profile.major, year: props.profile.year });
+const courses = ref(props.profile.courses);
+const newCourses: Ref<Array<string>> = ref([]);
+
+for (const course of props.profile.courses) {
+  newCourses.value.push(course);
+}
+
+const emit = defineEmits(["refreshProfile"]);
+
+const editProfile = async (update: BodyT) => {
+  try {
+    await fetchy(`/api/profile`, "PATCH", { body: { update: update } });
+  } catch (e) {
+    return;
+  }
+  emit("refreshProfile");
+};
+
+const editCourses = async (courses: Array<string>) => {
+  try {
+    const update = JSON.parse(JSON.stringify(courses));
+    await fetchy(`/api/profile`, "PATCH", { body: { update: { courses: update } } });
+  } catch (e) {
+    return;
+  }
+  emit("refreshProfile");
+};
+
+const addCourse = async () => {
+  try {
+    newCourses.value.push("[enter course]");
+  } catch (e) {
+    return;
+  }
+};
+
+const deleteCourse = async (index: number) => {
+  try {
+    newCourses.value.splice(index, 1);
+  } catch (e) {
+    return;
+  }
+};
+</script>
+
+<template>
+  <h2>Update user profile</h2>
+  <form @submit.prevent="editProfile(newProfile), editCourses(newCourses)" class="pure-form">
+    <fieldset>
+      <legend>Name</legend>
+      <input type="text" v-model="newProfile.name" required />
+      <legend>Major</legend>
+      <input type="text" v-model="newProfile.major" required />
+      <legend>Class Year of</legend>
+      <input type="number" v-model="newProfile.year" required />
+      <legend>Courses</legend>
+      <!-- <p>(format: "[course1]", "[course2]")</p>
+      <input type="text" v-model="courses" required /> -->
+
+      <div v-for="(course, index) in newCourses" :key="index">
+        <input v-model="newCourses[index]" />
+        <button type="button" @click="deleteCourse(index)">Delete</button>
+      </div>
+      <button type="button" @click="addCourse">Add Course</button>
+    </fieldset>
+    <button type="submit" class="pure-button pure-button-primary">Update Profile</button>
+  </form>
+</template>
+
+<style scoped>
+form {
+  background-color: var(--base-bg);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  height: 6em;
+  border-radius: 4px;
+  resize: none;
+}
+
+button {
+  height: 2em;
+}
+
+p {
+  margin: 0em;
+}
+
+.author {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+menu {
+  list-style-type: none;
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+  padding: 0;
+  margin: 0;
+}
+</style>
