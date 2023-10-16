@@ -36,13 +36,14 @@ onBeforeMount(async () => {
       <h2>{{ profile.major }}</h2>
       <h2>Class of {{ profile.year }}</h2>
     </div>
-
-    <div class="courses">
-      <article v-for="(course, index) in profile.courses" :key="course" v-bind:style="{ backgroundColor: colors[index % colors.length] }">
-        {{ course }}
-      </article>
-    </div>
-    <EditProfileForm :profile="profile" @refreshProfile="getProfile(currentUsername)" />
+    <section>
+      <div class="courses">
+        <article v-for="(course, index) in profile.courses" :key="course" v-bind:style="{ backgroundColor: colors[index % colors.length] }">
+          {{ course }}
+        </article>
+      </div>
+      <EditProfileForm :profile="profile" @refreshProfile="getProfile(currentUsername)" />
+    </section>
   </section>
   <p v-else-if="loaded">No profile found</p>
   <p v-else>Loading...</p>
@@ -70,13 +71,15 @@ article {
   width: fit-content;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 0.5em;
-  padding: 1em;
+  gap: 0.25em;
+  padding: 0.75em;
 }
 .courses {
   display: flex;
   gap: 1em;
+  width: 30em;
   justify-content: center;
+  flex-flow: row wrap;
 }
 
 .posts {

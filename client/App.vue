@@ -36,6 +36,7 @@ onBeforeMount(async () => {
         </li>
         <li v-if="isLoggedIn">
           <RouterLink :to="{ name: 'Profile' }" :class="{ underline: currentRouteName == 'Profile' }"> Profile </RouterLink>
+          <RouterLink :to="{ name: 'Friends' }" :class="{ underline: currentRouteName == 'Friends' }">Friends</RouterLink>
           <RouterLink :to="{ name: 'Settings' }" :class="{ underline: currentRouteName == 'Settings' }"> Settings </RouterLink>
         </li>
         <li v-else>
@@ -54,7 +55,7 @@ onBeforeMount(async () => {
 @import "./assets/toast.css";
 
 nav {
-  padding: 1em 2em;
+  padding: 0.25em 2em;
   background-color: lightgray;
   display: flex;
   align-items: center;

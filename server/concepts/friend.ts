@@ -18,9 +18,14 @@ export default class FriendConcept {
   public readonly requests = new DocCollection<FriendRequestDoc>("friendRequests");
 
   async getRequests(user: ObjectId) {
-    return await this.requests.readMany({
-      $or: [{ from: user }, { to: user }],
-    });
+    return await this.requests.readMany(
+      {
+        $or: [{ from: user }, { to: user }],
+      },
+      {
+        sort: { status: -1 },
+      },
+    );
   }
 
   async sendRequest(from: ObjectId, to: ObjectId) {
