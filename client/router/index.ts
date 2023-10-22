@@ -5,10 +5,10 @@ import { useUserStore } from "@/stores/user";
 import FriendsView from "../views/FriendsView.vue";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
+import MessagesView from "../views/MessagesView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 import ProfileView from "../views/ProfileView.vue";
 import SettingView from "../views/SettingView.vue";
-
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -26,6 +26,11 @@ const router = createRouter({
       path: "/friends",
       name: "Friends",
       component: FriendsView,
+    },
+    {
+      path: "/messages",
+      name: "Messages",
+      component: MessagesView,
     },
     {
       path: "/setting",
