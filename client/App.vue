@@ -25,9 +25,9 @@ onBeforeMount(async () => {
   <header>
     <nav>
       <div class="title">
-        <img src="@/assets/images/logo.svg" />
+        <img src="@/assets/images/logo.png" />
         <RouterLink :to="{ name: 'Home' }">
-          <h1>Mingle</h1>
+          <h1 style="font-family: &quot;Playpen Sans&quot;, cursive">Mingle</h1>
         </RouterLink>
       </div>
       <ul>
@@ -54,10 +54,11 @@ onBeforeMount(async () => {
 
 <style scoped>
 @import "./assets/toast.css";
+@import url("https://fonts.googleapis.com/css2?family=Playpen+Sans&display=swap");
 
 nav {
   padding: 0.25em 2em;
-  background-color: lightgray;
+  background-color: white;
   display: flex;
   align-items: center;
 }
