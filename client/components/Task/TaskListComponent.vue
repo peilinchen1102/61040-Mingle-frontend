@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onBeforeMount, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
+import CreateTaskForm from "./CreateTaskForm.vue";
 import GroupTaskComponent from "./GroupTaskComponent.vue";
 import TaskComponent from "./TaskComponent.vue";
 const loaded = ref(false);
@@ -59,34 +60,46 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <section v-if="loaded && personalTasks.length !== 0">
-    <ul v-for="personalTask in personalTasks" :key="personalTask._id">
-      <TaskComponent :personalTask="personalTask" @click="toggleTask(personalTask)" />
-    </ul>
-  </section>
-  <p v-else-if="loaded">No messages found</p>
-  <p v-else>Loading...</p>
-  <section v-if="loaded && groupTasks.length !== 0">
-    <ul v-for="groupTask in groupTasks" :key="groupTask._id">
-      <GroupTaskComponent :groupTask="groupTask" @click="toggleGroupTask(groupTask)" />
-    </ul>
-  </section>
-  <p v-else-if="loaded">No messages found</p>
-  <p v-else>Loading...</p>
+  <div class="todo">
+    <h2 style="font-family: &quot;Playpen Sans&quot;, cursive; text-align: center">Todo</h2>
+    <section v-if="loaded && personalTasks.length !== 0" style="font-family: &quot;Playpen Sans&quot;, cursive">
+      <ul v-for="groupTask in groupTasks" :key="groupTask._id">
+        <GroupTaskComponent :groupTask="groupTask" @click="toggleGroupTask(groupTask)" />
+      </ul>
+      <ul v-for="personalTask in personalTasks" :key="personalTask._id">
+        <TaskComponent :personalTask="personalTask" @click="toggleTask(personalTask)" />
+      </ul>
+
+      <CreateTaskForm @refreshTasks="getTasks" />
+    </section>
+    <p v-else-if="loaded">No group tasks found</p>
+    <p v-else>Loading...</p>
+  </div>
 </template>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Playpen+Sans&display=swap");
+
 section {
   display: flex;
   flex-direction: column;
   gap: 1em;
   justify-content: center;
+  height: fit-content;
+  max-height: 30em;
+  overflow: scroll;
 }
 
 section,
 p {
   margin: 0 auto;
   align-content: center;
+}
+
+.todo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 article {
@@ -103,8 +116,8 @@ article {
 ul {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-content: center;
+  font-size: 20px;
+  width: fit-content;
 }
 
 .row {
