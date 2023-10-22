@@ -13,8 +13,8 @@ const emit = defineEmits(["refreshConvo"]);
     <section class="header">
       <p class="author">{{ props.friend }}</p>
     </section>
-    <div class="parentWindow" id="parentWindow">
-      <section v-for="message in props.conversation.slice().reverse()" :key="message.id" class="window">
+    <div class="parentWindow">
+      <section v-for="message in props.conversation" :key="message.id" class="window">
         <div v-if="message.from == currentUsername" style="display: flex; justify-content: flex-end">
           <p class="message">{{ message.content }}</p>
         </div>
@@ -76,18 +76,12 @@ menu {
 }
 
 .parentWindow {
+  display: flex;
   overflow: scroll;
   max-height: 40em;
   flex-direction: column-reverse;
 }
 
-#scroller * {
-  overflow-anchor: none;
-}
-
-#anchor {
-  overflow-anchor: auto;
-}
 .conversation {
   width: 70em;
   position: absolute;

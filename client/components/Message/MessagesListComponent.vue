@@ -19,21 +19,25 @@ async function getFriends() {
   friends.value = friendResults;
 }
 
-async function getMessages() {
+async function getMessages(username?: string) {
   let conversationResults = new Map();
   try {
     for (const friend of friends.value) {
       const conversation = await fetchy(`/api/messages/${friend}`, "GET");
       conversationResults.set(friend, conversation);
-      // if (conversation) {
-      //   curConversation.value = friend;
-      // }
     }
   } catch (e) {
     return;
   }
-  conversations.value = new Map([...conversationResults.entries()].sort((a, b) => a[1][0].dateCreated - b[1][0].dateCreated));
-  curConversation.value = conversations.value.entries().next().value[0];
+  conversations.value = new Map([...conversationResults.entries()].sort((a, b) => -Date.parse(a[1][0].dateCreated) + Date.parse(b[1][0].dateCreated)));
+
+  if (username) {
+    curConversation.value = username;
+  } else {
+    if (curConversation.value == "") {
+      curConversation.value = conversations.value.keys().next().value;
+    }
+  }
 }
 
 async function updateCurConversation(person: string) {
@@ -57,7 +61,7 @@ onBeforeMount(async () => {
     <p v-else-if="loaded">No messages found</p>
     <p v-else>Loading...</p>
     <section v-if="loaded && conversations.size !== 0">
-      <MessagesHistoryComponent :friend="curConversation" :conversation="conversations.get(curConversation)" @refreshConvo="getMessages" />
+      <MessagesHistoryComponent :friend="curConversation" :conversation="conversations.get(curConversation)" @refreshConvo="getMessages(curConversation)" />
     </section>
   </section>
 </template>
