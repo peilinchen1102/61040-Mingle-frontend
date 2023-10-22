@@ -2,16 +2,18 @@
 const props = defineProps(["friend", "conversation"]);
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
+import SendMessageForm from "./SendMessageForm.vue";
 
 const { currentUsername } = storeToRefs(useUserStore());
+const emit = defineEmits(["refreshConvo"]);
 </script>
 
 <template>
-  <div class="conversation">
-    <div>
-      <div class="header">
-        <p class="author">{{ props.friend }}</p>
-      </div>
+  <div class="conversation" id="scroller">
+    <section class="header">
+      <p class="author">{{ props.friend }}</p>
+    </section>
+    <div class="parentWindow" id="parentWindow">
       <section v-for="message in props.conversation.slice().reverse()" :key="message.id" class="window">
         <div v-if="message.from == currentUsername" style="display: flex; justify-content: flex-end">
           <p class="message">{{ message.content }}</p>
@@ -22,6 +24,7 @@ const { currentUsername } = storeToRefs(useUserStore());
         </div>
       </section>
     </div>
+    <SendMessageForm :friend="props.friend" @refreshConvo="emit('refreshConvo')" />
   </div>
 </template>
 
@@ -36,10 +39,11 @@ p {
 }
 
 .header {
-  display: flex;
+  display: block;
   background-color: rgba(171, 171, 171, 0.636);
   padding: 0.75em;
   border-radius: 0.25em;
+  position: static;
 }
 menu {
   list-style-type: none;
@@ -71,7 +75,23 @@ menu {
   padding: 1em;
 }
 
+.parentWindow {
+  overflow: scroll;
+  max-height: 40em;
+  flex-direction: column-reverse;
+}
+
+#scroller * {
+  overflow-anchor: none;
+}
+
+#anchor {
+  overflow-anchor: auto;
+}
 .conversation {
   width: 70em;
+  position: absolute;
+  left: 45em;
+  top: 8.9em;
 }
 </style>
