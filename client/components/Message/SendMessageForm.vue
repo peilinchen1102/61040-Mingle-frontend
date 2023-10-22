@@ -2,16 +2,25 @@
 import { fetchy } from "@/utils/fetchy";
 import { ref } from "vue";
 
-const props = defineProps(["friend"]);
+const props = defineProps(["friend", "friends"]);
 const emit = defineEmits(["refreshConvo"]);
 let content = ref("");
 
 async function sendMessage(username: string, content: string) {
-  try {
-    await fetchy(`/api/messages/${username}`, "POST", { body: { content } });
-  } catch (_) {
-    return;
+  if (JSON.parse(JSON.stringify(props.friends)).includes(username)) {
+    try {
+      await fetchy(`/api/messages/${username}`, "POST", { body: { content } });
+    } catch (_) {
+      return;
+    }
+  } else {
+    try {
+      await fetchy(`/api/group/sendMsg/${username}`, "POST", { body: { content } });
+    } catch (e) {
+      return;
+    }
   }
+
   emptyForm();
   emit("refreshConvo");
 }
@@ -24,7 +33,7 @@ const emptyForm = () => {
 <template>
   <form id="texting" @submit.prevent="sendMessage(props.friend, content)" class="pure-form">
     <input class="textbox" type="text" v-model="content" placeholder="Send Message" required />
-    <button type="submit" class="pure-button pure-button-primary">Send</button>
+    <button type="submit" class="pure-button pure-button-primary" style="background-color: black">Send</button>
   </form>
 </template>
 

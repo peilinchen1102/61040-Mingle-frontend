@@ -1,9 +1,9 @@
 <script setup lang="ts">
-const props = defineProps(["friend", "conversation"]);
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 import SendMessageForm from "./SendMessageForm.vue";
 
+const props = defineProps(["friend", "conversation", "friends"]);
 const { currentUsername } = storeToRefs(useUserStore());
 const emit = defineEmits(["refreshConvo"]);
 </script>
@@ -24,7 +24,7 @@ const emit = defineEmits(["refreshConvo"]);
         </div>
       </section>
     </div>
-    <SendMessageForm :friend="props.friend" @refreshConvo="emit('refreshConvo')" />
+    <SendMessageForm :friends="props.friends" :friend="props.friend" @refreshConvo="emit('refreshConvo')" />
   </div>
 </template>
 

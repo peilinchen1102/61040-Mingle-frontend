@@ -7,6 +7,7 @@ import MessagesHistoryComponent from "./MessagesHistoryComponent.vue";
 const loaded = ref(false);
 let conversations = ref(new Map());
 let friends = ref<Array<string>>([]);
+let groups = ref<Array<Record<string, string>>>([]);
 let curConversation = ref<string>("");
 
 async function getFriends() {
@@ -19,12 +20,31 @@ async function getFriends() {
   friends.value = friendResults;
 }
 
+async function getGroups() {
+  let groupsResult;
+  try {
+    groupsResult = await fetchy("/api/groups", "GET");
+  } catch (e) {
+    return;
+  }
+  groups.value = groupsResult;
+}
+
 async function getMessages(username?: string) {
   let conversationResults = new Map();
   try {
     for (const friend of friends.value) {
       const conversation = await fetchy(`/api/messages/${friend}`, "GET");
-      conversationResults.set(friend, conversation);
+      if (conversation.length !== 0) {
+        conversationResults.set(friend, conversation);
+      }
+    }
+
+    await getGroups();
+    for (const group of groups.value) {
+      if (group.messages.length !== 0) {
+        conversationResults.set(group.name, group.messages);
+      }
     }
   } catch (e) {
     return;
@@ -34,7 +54,7 @@ async function getMessages(username?: string) {
   if (username) {
     curConversation.value = username;
   } else {
-    if (curConversation.value == "") {
+    if (curConversation.value === "") {
       curConversation.value = conversations.value.keys().next().value;
     }
   }
@@ -46,6 +66,7 @@ async function updateCurConversation(person: string) {
 
 onBeforeMount(async () => {
   await getFriends();
+  await getGroups();
   await getMessages();
   loaded.value = true;
 });
@@ -61,7 +82,7 @@ onBeforeMount(async () => {
     <p v-else-if="loaded">No messages found</p>
     <p v-else>Loading...</p>
     <section v-if="loaded && conversations.size !== 0">
-      <MessagesHistoryComponent :friend="curConversation" :conversation="conversations.get(curConversation)" @refreshConvo="getMessages(curConversation)" />
+      <MessagesHistoryComponent :friends="friends" :friend="curConversation" :conversation="conversations.get(curConversation)" @refreshConvo="getMessages(curConversation)" />
     </section>
   </section>
 </template>
