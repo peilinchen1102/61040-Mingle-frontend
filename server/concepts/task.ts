@@ -59,6 +59,12 @@ export default class TaskConcept {
     return { msg: "Task successfully completed!" };
   }
 
+  async incompleteTask(user: ObjectId, _id: ObjectId) {
+    await this.isAssigned(user, _id);
+    await this.tasks.updateOne({ assigned: user, _id: _id }, { status: "incomplete" });
+    return { msg: "Task incomplete!" };
+  }
+
   async taskExist(_id: ObjectId) {
     const maybeTask = await this.tasks.readOne({ _id: _id });
     if (maybeTask == null) {

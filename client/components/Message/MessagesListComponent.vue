@@ -49,13 +49,36 @@ async function getMessages(username?: string) {
   } catch (e) {
     return;
   }
-  conversations.value = new Map([...conversationResults.entries()].sort((a, b) => -Date.parse(a[1][0].dateCreated) + Date.parse(b[1][0].dateCreated)));
+  conversations.value = new Map([...conversationResults.entries()].sort((a, b) => -Date.parse(a[1][0].dateCreated) + Date.parse(b[1][0].dateCreated)).reverse());
 
   if (username) {
     curConversation.value = username;
   } else {
     if (curConversation.value === "") {
       curConversation.value = conversations.value.keys().next().value;
+    }
+  }
+}
+
+async function getMessagesBetween(username: string) {
+  // user
+  if (JSON.parse(JSON.stringify(friends)).includes(username)) {
+    try {
+      const conversation = await fetchy(`/api/messages/${username}`, "GET");
+      conversations.value.delete(username);
+      conversations.value.set(username, conversation);
+    } catch (e) {
+      return;
+    }
+  }
+  // group
+  else {
+    try {
+      const group = await fetchy(`/api/groups/${username}`, "GET");
+      conversations.value.delete(username);
+      conversations.value.set(username, group.messages);
+    } catch (e) {
+      return;
     }
   }
 }
@@ -74,7 +97,7 @@ onBeforeMount(async () => {
 
 <template>
   <section class="column">
-    <section v-if="loaded && conversations.size !== 0">
+    <section v-if="loaded && conversations.size !== 0" class="reverse">
       <article v-for="[friend, messages] in conversations" :key="friend">
         <MessageComponent :messages="messages" :friend="friend" @click="updateCurConversation(friend)" />
       </article>
@@ -121,5 +144,10 @@ article {
   display: flex;
   flex-direction: row;
   gap: 50em;
+}
+
+.reverse {
+  display: flex;
+  flex-direction: column-reverse;
 }
 </style>

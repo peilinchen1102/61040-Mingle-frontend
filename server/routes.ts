@@ -306,11 +306,24 @@ class Routes {
     return await Task.completeTask(user, _id);
   }
 
-  @Router.patch("/task/complete/:groupName")
+  @Router.patch("/task/incomplete")
+  async incompleteTask(session: WebSessionDoc, _id: ObjectId) {
+    const user = WebSession.getUser(session);
+    return await Task.incompleteTask(user, _id);
+  }
+
+  @Router.patch("/task/group/complete")
   async completeGroupTask(session: WebSessionDoc, _id: ObjectId, groupName: string) {
     const user = WebSession.getUser(session);
     await Group.isGroupMember(user, groupName);
     return await GroupTask.completeTask(user, _id);
+  }
+
+  @Router.patch("/task/group/incomplete")
+  async incompleteGroupTask(session: WebSessionDoc, _id: ObjectId, groupName: string) {
+    const user = WebSession.getUser(session);
+    await Group.isGroupMember(user, groupName);
+    return await GroupTask.incompleteTask(user, _id);
   }
 
   @Router.patch("/task/delete")

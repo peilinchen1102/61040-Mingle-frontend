@@ -38,6 +38,7 @@ onBeforeMount(async () => {
           <RouterLink :to="{ name: 'Profile' }" :class="{ underline: currentRouteName == 'Profile' }" style="margin-right: 12px"> Profile </RouterLink>
           <RouterLink :to="{ name: 'Friends' }" :class="{ underline: currentRouteName == 'Friends' }" style="margin-right: 12px">Friends</RouterLink>
           <RouterLink :to="{ name: 'Messages' }" :class="{ underline: currentRouteName == 'Messages' }" style="margin-right: 12px">Messages</RouterLink>
+          <RouterLink :to="{ name: 'Tasks' }" :class="{ underline: currentRouteName == 'Tasks' }" style="margin-right: 12px">Tasks</RouterLink>
           <RouterLink :to="{ name: 'Settings' }" :class="{ underline: currentRouteName == 'Settings' }"> Settings </RouterLink>
         </li>
         <li v-else>

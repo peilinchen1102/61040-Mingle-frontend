@@ -121,11 +121,12 @@ export default class Responses {
     const usernames = await User.idsToUsernames(tasks.map((task) => task.assigned));
     let groupTask = false;
 
-    for (const key in tasks) {
+    for (const key in tasks[0]) {
       if (key === "group") {
         groupTask = true;
       }
     }
+
     if (groupTask) {
       const groupNames = await Group.getGroupNameByIds(tasks.map((task) => (task as GroupTaskDoc).group));
       return tasks.map((task, i) => ({ ...task, assigned: usernames[i], group: groupNames[i] }));
