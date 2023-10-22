@@ -43,7 +43,7 @@ async function rejectFriendRequest(username: string) {
       <p>{{ props.req.to }}</p>
       <p>status: {{ props.req.status }}</p>
       <menu v-if="props.req.status == 'pending'">
-        <li><button class="button-error btn-small pure-button" @click="removeFriendRequest(props.req.to)">Remove</button></li>
+        <li><button class="button-error button-4 small" @click="removeFriendRequest(props.req.to)">Remove</button></li>
       </menu>
     </div>
   </div>
@@ -52,8 +52,8 @@ async function rejectFriendRequest(username: string) {
       <p>{{ props.req.from }}</p>
       <p>status: {{ props.req.status }}</p>
       <menu v-if="props.req.status == 'pending'">
-        <li><button class="btn-small pure-button" @click="acceptFriendRequest(props.req.from)">Accept</button></li>
-        <li><button class="button-error btn-small pure-button" @click="rejectFriendRequest(props.req.from)">Reject</button></li>
+        <button class="button-4 small" @click="acceptFriendRequest(props.req.from)">Accept</button>
+        <button class="button-4 button-error small" @click="rejectFriendRequest(props.req.from)">Reject</button>
       </menu>
     </div>
   </div>
@@ -72,14 +72,14 @@ menu {
   display: flex;
   flex-direction: row;
   gap: 1em;
-  padding: 0;
+  padding: 5px;
   margin: 0;
 }
 
 .base {
   display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
   width: 10em;
 }

@@ -45,7 +45,7 @@ onBeforeMount(async () => {
 
 <template>
   <section class="column">
-    <section>
+    <section style="position: absolute; top: 10em; left: 25em">
       <h2>Friends</h2>
       <section class="row" v-if="loaded && friends.length !== 0">
         <article v-for="friend in friends" :key="friend._id" style="width: 15em">
@@ -56,11 +56,11 @@ onBeforeMount(async () => {
       <p v-else>Loading...</p>
     </section>
 
-    <section>
+    <section style="position: absolute; top: 10em; left: 70em">
       <h2>Friend Requests</h2>
       <SendFriendRequestForm @refreshReqs="getFriendRequests" />
       <section class="column">
-        <section>
+        <section style="position: absolute; top: 10em; left: -7em">
           <h3>To:</h3>
           <section v-if="loaded && friendReqs.filter((r) => r.from == currentUsername).length !== 0">
             <article v-for="req in friendReqs.filter((r) => r.from == currentUsername)" :key="req._id">
@@ -71,7 +71,7 @@ onBeforeMount(async () => {
           <p v-else>Loading...</p>
         </section>
 
-        <section>
+        <section style="position: absolute; top: 10em; left: 7em">
           <h3>From:</h3>
           <section v-if="loaded && friendReqs.filter((r) => r.from !== currentUsername).length !== 0">
             <article v-for="req in friendReqs.filter((r) => r.from !== currentUsername)" :key="req._id">

@@ -17,7 +17,7 @@ async function removeFriend(username: string) {
 <template>
   <div class="friend">
     <p class="author">{{ props.friend }}</p>
-    <button class="button-error btn-small pure-button" @click="removeFriend(props.friend)">Remove</button>
+    <button class="button-error button-4 small" @click="removeFriend(props.friend)">Remove</button>
   </div>
 </template>
 
@@ -28,7 +28,7 @@ p {
 
 .author {
   font-weight: bold;
-  font-size: 1.2em;
+  font-size: 1em;
 }
 
 menu {
@@ -42,8 +42,7 @@ menu {
 
 .friend {
   display: flex;
-  justify-content: flex-start;
-  gap: 5em;
+  justify-content: space-between;
   padding-left: 1em;
 }
 </style>

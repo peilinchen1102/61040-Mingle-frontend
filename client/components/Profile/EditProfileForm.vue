@@ -33,7 +33,7 @@ const editCourses = async (courses: Array<string>) => {
 
 const addCourse = async () => {
   try {
-    newCourses.value.push("[enter course]");
+    newCourses.value.push("");
   } catch (e) {
     return;
   }
@@ -73,9 +73,9 @@ const deleteCourse = async (index: number) => {
           </svg>
         </button>
       </div>
-      <button type="button" @click="addCourse">Add Course</button>
+      <button type="button" class="button-4" @click="addCourse">Add Course</button>
     </fieldset>
-    <button type="submit" class="pure-button pure-button-primary">Update Profile</button>
+    <button type="submit" class="button-6">Update Profile</button>
   </form>
 </template>
 
@@ -97,10 +97,6 @@ textarea {
   height: 6em;
   border-radius: 4px;
   resize: none;
-}
-
-button {
-  height: 2em;
 }
 
 p {
