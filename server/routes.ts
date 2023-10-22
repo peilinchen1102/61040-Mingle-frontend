@@ -291,7 +291,6 @@ class Routes {
 
   @Router.post("/task/add/:groupName")
   async assignTask(session: WebSessionDoc, content: string, groupName: string, to: string) {
-    console.log(content, groupName, to);
     const user = WebSession.getUser(session);
     const assigned = (await User.getUserByUsername(to))._id;
     const group = await Group.getGroupByName(groupName);

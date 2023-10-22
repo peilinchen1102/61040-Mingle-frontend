@@ -1,16 +1,16 @@
 <script setup lang="ts">
-const props = defineProps(["personalTask"]);
+const props = defineProps(["groupTask"]);
 </script>
 
 <template>
-  <div v-if="props.personalTask.status === 'incomplete'">
+  <div v-if="props.groupTask.status === 'incomplete'">
     <div class="checkbox-wrapper-4">
       <input class="inp-cbx" type="checkbox" />
       <label class="cbx"
         ><span>
           <svg width="12px" height="10px">
             <use xlink:href="#check-4"></use></svg></span
-        ><span>{{ props.personalTask.todo }}</span></label
+        ><span>{{ props.groupTask.todo }}</span></label
       >
       <svg class="inline-svg">
         <symbol id="check-4" viewbox="0 0 12 10">
@@ -26,7 +26,7 @@ const props = defineProps(["personalTask"]);
         ><span>
           <svg width="12px" height="10px">
             <use xlink:href="#check-4"></use></svg></span
-        ><span class="strikethrough">{{ props.personalTask.todo }}</span></label
+        ><span class="strikethrough">{{ props.groupTask.todo }}</span></label
       >
       <svg class="inline-svg">
         <symbol id="check-4" viewbox="0 0 12 10">

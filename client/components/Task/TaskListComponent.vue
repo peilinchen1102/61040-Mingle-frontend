@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { onBeforeMount, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
+import GroupTaskComponent from "./GroupTaskComponent.vue";
 import TaskComponent from "./TaskComponent.vue";
-
 const loaded = ref(false);
 let personalTasks = ref<Array<Record<string, string>>>([]);
 let groupTasks = ref<Array<Record<string, string>>>([]);
@@ -59,14 +59,16 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <section v-if="loaded && personalTasks.length + groupTasks.length !== 0">
+  <section v-if="loaded && personalTasks.length !== 0">
     <ul v-for="personalTask in personalTasks" :key="personalTask._id">
-      <TaskComponent :task="personalTask" @click="toggleTask(personalTask)" />
+      <TaskComponent :personalTask="personalTask" @click="toggleTask(personalTask)" />
     </ul>
   </section>
-  <section v-if="loaded && personalTasks.length + groupTasks.length !== 0">
+  <p v-else-if="loaded">No messages found</p>
+  <p v-else>Loading...</p>
+  <section v-if="loaded && groupTasks.length !== 0">
     <ul v-for="groupTask in groupTasks" :key="groupTask._id">
-      <TaskComponent :task="groupTask" @click="toggleGroupTask(groupTask)" />
+      <GroupTaskComponent :groupTask="groupTask" @click="toggleGroupTask(groupTask)" />
     </ul>
   </section>
   <p v-else-if="loaded">No messages found</p>
