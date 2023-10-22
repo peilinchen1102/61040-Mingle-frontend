@@ -40,7 +40,7 @@ p {
 
 .header {
   display: block;
-  background-color: rgba(171, 171, 171, 0.636);
+  background-color: rgba(204, 204, 204, 0.636);
   padding: 0.75em;
   border-radius: 0.25em;
   position: static;
