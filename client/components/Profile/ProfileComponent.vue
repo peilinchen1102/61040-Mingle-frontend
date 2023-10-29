@@ -6,7 +6,7 @@ import { onBeforeMount, ref } from "vue";
 import EditProfileForm from "./EditProfileForm.vue";
 
 const { currentUsername } = storeToRefs(useUserStore());
-
+const props = defineProps(["username"]);
 const loaded = ref(false);
 
 let profile = ref();
@@ -24,7 +24,12 @@ async function getProfile(username: string) {
 }
 
 onBeforeMount(async () => {
-  await getProfile(currentUsername.value);
+  if (props.username !== undefined) {
+    await getProfile(props.username);
+  } else {
+    await getProfile(currentUsername.value);
+  }
+
   loaded.value = true;
 });
 </script>

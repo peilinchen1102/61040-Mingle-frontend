@@ -56,8 +56,10 @@
     "pinia-plugin-persistedstate": "^3.2.0",
     "purecss": "^3.0.0",
     "reflect-metadata": "^0.1.13",
+    "swiper": "^11.0.3",
     "vue": "^3.3.4",
-    "vue-router": "^4.2.4"
+    "vue-router": "^4.2.4",
+    "vue3-draggable": "^2.0.9"
   },
   "prettier": {
     "trailingComma": "all",

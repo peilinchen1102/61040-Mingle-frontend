@@ -5,6 +5,7 @@ import { useUserStore } from "@/stores/user";
 import FriendsView from "../views/FriendsView.vue";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
+import MatchView from "../views/MatchView.vue";
 import MessagesView from "../views/MessagesView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 import ProfileView from "../views/ProfileView.vue";
@@ -38,6 +39,11 @@ const router = createRouter({
       path: "/tasks",
       name: "Tasks",
       component: TaskView,
+    },
+    {
+      path: "/match",
+      name: "Match",
+      component: MatchView,
     },
     {
       path: "/setting",
