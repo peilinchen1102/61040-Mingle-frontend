@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 import MatchRequestForm from "./MatchRequestForm.vue";
-import SwiperCarousel from "./SwiperCarousel.vue";
+// import SwiperCarousel from "./SwiperCarousel.vue";
 
 let matches = ref<Array<string>>([]);
 
