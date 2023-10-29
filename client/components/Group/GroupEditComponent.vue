@@ -5,7 +5,7 @@ import { onBeforeMount, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 
 const props = defineProps(["groupName"]);
-const emit = defineEmits(["refreshGroup"]);
+const emit = defineEmits(["done"]);
 const { currentUsername } = storeToRefs(useUserStore());
 const group = ref();
 let loaded = ref(false);
@@ -26,16 +26,16 @@ async function removeMember(memberUsername: string) {
   } catch (e) {
     return;
   }
-  emit("refreshGroup");
+  emit("done");
 }
 
-async function deleteGroup(g) {
+async function deleteGroup() {
   try {
     await fetchy(`/api/group/delete/${props.groupName}`, "DELETE");
   } catch (e) {
     return;
   }
-  emit("refreshGroup");
+  emit("done");
 }
 
 async function leaveGroup() {
@@ -44,7 +44,7 @@ async function leaveGroup() {
   } catch (e) {
     return;
   }
-  emit("refreshGroup");
+  emit("done");
 }
 
 onBeforeMount(async () => {
@@ -71,6 +71,7 @@ onBeforeMount(async () => {
         </article>
         <button v-if="group.owner == currentUsername" class="button-4 button-error" @click="deleteGroup">Delete Group</button>
         <button v-if="group.owner != currentUsername" class="button-4 pure-button-primary" @click="leaveGroup">Leave Group</button>
+        <button class="button-4 pure-button-primary" @click="emit('done')">Done</button>
       </section>
     </section>
     <p v-else-if="loaded">No group found</p>

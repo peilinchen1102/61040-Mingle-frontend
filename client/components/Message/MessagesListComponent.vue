@@ -64,7 +64,7 @@ async function getMessages(username?: string) {
 let groupEdit = ref(false);
 
 async function edit() {
-  groupEdit.value = true;
+  groupEdit.value = !groupEdit.value;
 }
 
 async function getMessagesBetween(username: string) {
@@ -116,7 +116,7 @@ onBeforeMount(async () => {
     </section>
   </section>
   <section v-else>
-    <GroupEditComponent :groupName="curConversation" @refreshGroup="getMessages(curConversation)" />
+    <GroupEditComponent :groupName="curConversation" @refreshGroup="getMessages(curConversation)" @done="edit" />
   </section>
 </template>
 
