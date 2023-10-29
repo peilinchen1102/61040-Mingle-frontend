@@ -5,13 +5,18 @@ import SendMessageForm from "./SendMessageForm.vue";
 
 const props = defineProps(["friend", "conversation", "friends"]);
 const { currentUsername } = storeToRefs(useUserStore());
-const emit = defineEmits(["refreshConvo"]);
+const emit = defineEmits(["refreshConvo", "edit"]);
 </script>
 
 <template>
-  <div class="conversation" id="scroller">
+  <div class="conversation">
     <section class="header">
       <p class="author">{{ props.friend }}</p>
+      <p v-if="!props.friends.includes(props.friend)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16" @click="emit('edit')" @refreshConvo="emit('refreshConvo')">
+          <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
+        </svg>
+      </p>
     </section>
     <div class="parentWindow">
       <section v-for="message in props.conversation" :key="message.id" class="window">
@@ -39,11 +44,14 @@ p {
 }
 
 .header {
-  display: block;
+  display: flex;
   background-color: rgba(204, 204, 204, 0.636);
   padding: 0.75em;
   border-radius: 0.25em;
   position: static;
+  justify-content: space-between;
+  height: 2em;
+  align-items: center;
 }
 menu {
   list-style-type: none;

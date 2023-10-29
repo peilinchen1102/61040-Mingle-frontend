@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onBeforeMount, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
+import GroupEditComponent from "../Group/GroupEditComponent.vue";
 import MessageComponent from "./MessageComponent.vue";
 import MessagesHistoryComponent from "./MessagesHistoryComponent.vue";
 
@@ -60,6 +61,12 @@ async function getMessages(username?: string) {
   }
 }
 
+let groupEdit = ref(false);
+
+async function edit() {
+  groupEdit.value = true;
+}
+
 async function getMessagesBetween(username: string) {
   // user
   if (JSON.parse(JSON.stringify(friends)).includes(username)) {
@@ -96,7 +103,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <section class="column">
+  <section v-if="!groupEdit" class="column">
     <section v-if="loaded && conversations.size !== 0" class="reverse">
       <article v-for="[friend, messages] in conversations" :key="friend">
         <MessageComponent :messages="messages" :friend="friend" @click="updateCurConversation(friend)" />
@@ -105,8 +112,11 @@ onBeforeMount(async () => {
     <p v-else-if="loaded">No messages found</p>
     <p v-else>Loading...</p>
     <section v-if="loaded && conversations.size !== 0">
-      <MessagesHistoryComponent :friends="friends" :friend="curConversation" :conversation="conversations.get(curConversation)" @refreshConvo="getMessages(curConversation)" />
+      <MessagesHistoryComponent :friends="friends" :friend="curConversation" :conversation="conversations.get(curConversation)" @refreshConvo="getMessages(curConversation)" @edit="edit" />
     </section>
+  </section>
+  <section v-else>
+    <GroupEditComponent :groupName="curConversation" @refreshGroup="getMessages(curConversation)" />
   </section>
 </template>
 
