@@ -62,7 +62,12 @@ async function match(year: string, clas: string, collab: string, size: string, h
         <option value="off-campus">off-campus</option>
         <option value="on-campus">on-campus</option>
       </select>
-      <button type="submit" class="button-4">Send</button>
+      <button type="submit" class="button-6">
+        Match
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lightning-fill" viewBox="0 0 16 16" style="padding-left: 15px">
+          <path d="M5.52.359A.5.5 0 0 1 6 0h4a.5.5 0 0 1 .474.658L8.694 6H12.5a.5.5 0 0 1 .395.807l-7 9a.5.5 0 0 1-.873-.454L6.823 9.5H3.5a.5.5 0 0 1-.48-.641l2.5-8.5z" />
+        </svg>
+      </button>
     </form>
   </div>
 </template>
@@ -90,8 +95,12 @@ article {
   padding: 1em;
 }
 
-.button-4 {
+.button-6 {
   width: 15em;
+  background: rgb(119, 84, 255);
+  background: linear-gradient(90deg, rgba(119, 84, 255, 0.7525603991596639) 35%, rgba(0, 239, 255, 0.8057816876750701) 100%);
+  color: white;
+  font-size: larger;
 }
 
 .posts {

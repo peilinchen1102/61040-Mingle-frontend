@@ -18,6 +18,7 @@ async function getMatches() {
   }
   matches.value = matchResults;
   len.value = matches.value.length;
+  index.value = 0;
 }
 
 async function incr() {

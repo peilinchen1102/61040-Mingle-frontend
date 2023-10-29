@@ -48,6 +48,7 @@ onBeforeMount(async () => {
     </section>
   </section>
   <p v-else-if="loaded">No profile found</p>
+  <section v-else>Click Next to View</section>
 </template>
 
 <style scoped>
