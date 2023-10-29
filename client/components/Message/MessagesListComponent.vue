@@ -13,7 +13,7 @@ let conversations = ref(new Map());
 let friends = ref<Array<string>>([]);
 let groups = ref<Array<Record<string, string>>>([]);
 let curConversation = ref<string>("");
-let action = ref("");
+let action = ref("sendMessage");
 
 async function getFriends() {
   let friendResults;
@@ -91,11 +91,10 @@ onBeforeMount(async () => {
       </article>
       <section>
         <form class="row">
-          <input type="radio" v-model="action" value="sendMessage" />Send Message<br />
-          <input type="radio" v-model="action" value="createGroup" checked />Create Group<br />
+          <input type="radio" v-model="action" value="sendMessage" checked />Send Message<br />
+          <input type="radio" v-model="action" value="createGroup" />Create Group<br />
           <input type="radio" v-model="action" value="joinGroup" />Join Group
         </form>
-        <section v-if="action == 'sendMessage'"></section>
         <SendMessageWithUsernameForm v-if="action == 'sendMessage'" :friends="friends" @refreshConvo="getMessages(curConversation)" />
         <CreateGroupForm v-else-if="action == 'createGroup'" />
         <JoinGroupForm v-else-if="action == 'joinGroup'" />
@@ -152,5 +151,7 @@ article {
 .reverse {
   display: flex;
   flex-direction: column-reverse;
+  overflow: scroll;
+  max-height: 70em;
 }
 </style>
