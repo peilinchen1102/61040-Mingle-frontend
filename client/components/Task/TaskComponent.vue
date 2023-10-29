@@ -1,10 +1,39 @@
 <script setup lang="ts">
+import { fetchy } from "../../utils/fetchy";
+
 const props = defineProps(["personalTask"]);
+const emit = defineEmits(["refreshTasks"]);
+
+async function deleteTask(task: Record<string, string>) {
+  try {
+    await fetchy(`/api/task/delete/${task._id}`, "DELETE");
+  } catch (e) {
+    return;
+  }
+  emit("refreshTasks");
+}
+
+async function toggleTask(task: Record<string, string>) {
+  if (task.status === "incomplete") {
+    try {
+      await fetchy("/api/task/complete", "PATCH", { body: { _id: task._id } });
+    } catch (e) {
+      return;
+    }
+  } else {
+    try {
+      await fetchy("/api/task/incomplete", "PATCH", { body: { _id: task._id } });
+    } catch (e) {
+      return;
+    }
+  }
+  emit("refreshTasks");
+}
 </script>
 
 <template>
-  <div v-if="props.personalTask.status === 'incomplete'">
-    <div class="checkbox-wrapper-4">
+  <div v-if="props.personalTask.status === 'incomplete'" style="display: flex">
+    <div class="checkbox-wrapper-4" @click="toggleTask(props.personalTask)">
       <input class="inp-cbx" type="checkbox" />
       <label class="cbx"
         ><span>
@@ -19,8 +48,8 @@ const props = defineProps(["personalTask"]);
       </svg>
     </div>
   </div>
-  <div v-else>
-    <div class="checkbox-wrapper-4">
+  <div v-else style="display: flex">
+    <div class="checkbox-wrapper-4" @click="toggleTask(props.personalTask)">
       <input class="inp-cbx" type="checkbox" checked />
       <label class="cbx"
         ><span>
@@ -34,6 +63,13 @@ const props = defineProps(["personalTask"]);
         </symbol>
       </svg>
     </div>
+    <button>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray" class="bi bi-trash-fill" viewBox="0 0 16 16" @click="deleteTask(props.personalTask)">
+        <path
+          d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"
+        />
+      </svg>
+    </button>
   </div>
 </template>
 
@@ -142,5 +178,10 @@ const props = defineProps(["personalTask"]);
   50% {
     transform: scale(0.9);
   }
+}
+
+button {
+  background-color: white;
+  border: none;
 }
 </style>

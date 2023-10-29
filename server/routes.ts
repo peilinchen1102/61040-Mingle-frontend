@@ -325,13 +325,13 @@ class Routes {
     return await GroupTask.incompleteTask(user, _id);
   }
 
-  @Router.patch("/task/delete")
+  @Router.delete("/task/delete/:_id")
   async deleteTask(session: WebSessionDoc, _id: ObjectId) {
     const user = WebSession.getUser(session);
     return await Task.deleteTask(user, _id);
   }
 
-  @Router.patch("/task/delete/:groupName")
+  @Router.delete("/task/group/delete/:_id/:groupName")
   async deleteGroupTask(session: WebSessionDoc, _id: ObjectId, groupName: string) {
     const user = WebSession.getUser(session);
     await Group.isGroupMember(user, groupName);

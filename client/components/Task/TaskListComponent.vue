@@ -19,40 +19,6 @@ async function getTasks() {
   groupTasks.value = taskResults.group;
 }
 
-async function toggleTask(task: Record<string, string>) {
-  if (task.status === "incomplete") {
-    try {
-      await fetchy("/api/task/complete", "PATCH", { body: { _id: task._id } });
-    } catch (e) {
-      return;
-    }
-  } else {
-    try {
-      await fetchy("/api/task/incomplete", "PATCH", { body: { _id: task._id } });
-    } catch (e) {
-      return;
-    }
-  }
-  await getTasks();
-}
-
-async function toggleGroupTask(task: Record<string, string>) {
-  if (task.status === "incomplete") {
-    try {
-      await fetchy(`/api/task/group/complete`, "PATCH", { body: { _id: task._id, groupName: task.group } });
-    } catch (e) {
-      return;
-    }
-  } else {
-    try {
-      await fetchy(`/api/task/group/incomplete`, "PATCH", { body: { _id: task._id, groupName: task.group } });
-    } catch (e) {
-      return;
-    }
-  }
-  await getTasks();
-}
-
 onBeforeMount(async () => {
   await getTasks();
   loaded.value = true;
@@ -62,18 +28,19 @@ onBeforeMount(async () => {
 <template>
   <div class="todo">
     <h2 style="font-family: &quot;Playpen Sans&quot;, cursive; text-align: center">Todo</h2>
-    <section v-if="loaded && personalTasks.length !== 0" style="font-family: &quot;Playpen Sans&quot;, cursive">
+    <section v-if="loaded && personalTasks.length + groupTasks.length !== 0" style="font-family: &quot;Playpen Sans&quot;, cursive">
       <ul v-for="groupTask in groupTasks" :key="groupTask._id">
-        <GroupTaskComponent :groupTask="groupTask" @click="toggleGroupTask(groupTask)" />
+        <GroupTaskComponent :groupTask="groupTask" @refreshTasks="getTasks" />
       </ul>
       <ul v-for="personalTask in personalTasks" :key="personalTask._id">
-        <TaskComponent :personalTask="personalTask" @click="toggleTask(personalTask)" />
+        <TaskComponent :personalTask="personalTask" @refreshTasks="getTasks" />
       </ul>
-
-      <CreateTaskForm @refreshTasks="getTasks" />
     </section>
-    <p v-else-if="loaded">No group tasks found</p>
+    <p v-else-if="loaded">No tasks found</p>
     <p v-else>Loading...</p>
+    <div style="display: flex; justify-content: center">
+      <CreateTaskForm @refreshTasks="getTasks" />
+    </div>
   </div>
 </template>
 
@@ -85,9 +52,9 @@ section {
   flex-direction: column;
   gap: 1em;
   justify-content: center;
-  height: fit-content;
   max-height: 30em;
   overflow: scroll;
+  overflow-y: scroll; /* Show vertical scrollbar */
 }
 
 section,
