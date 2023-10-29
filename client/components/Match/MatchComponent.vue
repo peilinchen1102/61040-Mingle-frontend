@@ -3,9 +3,9 @@ import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
-import EditProfileForm from "./EditProfileForm.vue";
 
 const { currentUsername } = storeToRefs(useUserStore());
+const props = defineProps(["username"]);
 const loaded = ref(false);
 
 let profile = ref();
@@ -23,7 +23,9 @@ async function getProfile(username: string) {
 }
 
 onBeforeMount(async () => {
-  await getProfile(currentUsername.value);
+  if (currentUsername.value !== props.username.value) {
+    await getProfile(props.username);
+  }
 
   loaded.value = true;
 });
@@ -33,7 +35,7 @@ onBeforeMount(async () => {
   <section v-if="loaded && profile.value == null">
     <div>
       <h1>{{ profile.name }}</h1>
-      <h2>{{ currentUsername }}</h2>
+      <h2>{{ props.username }}</h2>
       <h2>{{ profile.major }}</h2>
       <h2>Class of {{ profile.year }}</h2>
     </div>
@@ -43,11 +45,9 @@ onBeforeMount(async () => {
           {{ course }}
         </article>
       </div>
-      <EditProfileForm :profile="profile" @refreshProfile="getProfile(currentUsername)" />
     </section>
   </section>
   <p v-else-if="loaded">No profile found</p>
-  <p v-else>Loading...</p>
 </template>
 
 <style scoped>

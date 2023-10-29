@@ -351,8 +351,8 @@ class Routes {
     const user = WebSession.getUser(session);
     const userIds = (await User.getUsers()).map((user) => user._id);
     const matches = await UserMatch.getMatches(user, userIds);
-    const profiles = await Promise.all(matches.map(async (match) => await Profile.getProfile(match[0])));
-    return profiles.length ? Responses.profiles(profiles) : { msg: "No matches found, try updating your preferences!" };
+    // const profiles = await Promise.all(matches.map(async (match) => await Profile.getProfile(match[0])));
+    return matches.length ? await Promise.all(matches.map(async (match) => (await User.getUserById(match[0])).username)) : { msg: "No matches found, try updating your preferences!" };
   }
 
   @Router.patch("/matches/preferences")
