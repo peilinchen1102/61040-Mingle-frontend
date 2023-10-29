@@ -1,15 +1,19 @@
 <script setup lang="ts">
 import { onBeforeMount, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
+import CreateGroupForm from "../Group/CreateGroupForm.vue";
 import GroupEditComponent from "../Group/GroupEditComponent.vue";
+import JoinGroupForm from "../Group/JoinGroupForm.vue";
 import MessageComponent from "./MessageComponent.vue";
 import MessagesHistoryComponent from "./MessagesHistoryComponent.vue";
+import SendMessageWithUsernameForm from "./SendMessageWithUsernameForm.vue";
 
 const loaded = ref(false);
 let conversations = ref(new Map());
 let friends = ref<Array<string>>([]);
 let groups = ref<Array<Record<string, string>>>([]);
 let curConversation = ref<string>("");
+let action = ref("");
 
 async function getFriends() {
   let friendResults;
@@ -67,29 +71,6 @@ async function edit() {
   groupEdit.value = !groupEdit.value;
 }
 
-async function getMessagesBetween(username: string) {
-  // user
-  if (JSON.parse(JSON.stringify(friends)).includes(username)) {
-    try {
-      const conversation = await fetchy(`/api/messages/${username}`, "GET");
-      conversations.value.delete(username);
-      conversations.value.set(username, conversation);
-    } catch (e) {
-      return;
-    }
-  }
-  // group
-  else {
-    try {
-      const group = await fetchy(`/api/groups/${username}`, "GET");
-      conversations.value.delete(username);
-      conversations.value.set(username, group.messages);
-    } catch (e) {
-      return;
-    }
-  }
-}
-
 async function updateCurConversation(person: string) {
   curConversation.value = person;
 }
@@ -108,6 +89,17 @@ onBeforeMount(async () => {
       <article v-for="[friend, messages] in conversations" :key="friend">
         <MessageComponent :messages="messages" :friend="friend" @click="updateCurConversation(friend)" />
       </article>
+      <section>
+        <form class="row">
+          <input type="radio" v-model="action" value="sendMessage" />Send Message<br />
+          <input type="radio" v-model="action" value="createGroup" checked />Create Group<br />
+          <input type="radio" v-model="action" value="joinGroup" />Join Group
+        </form>
+        <section v-if="action == 'sendMessage'"></section>
+        <SendMessageWithUsernameForm v-if="action == 'sendMessage'" :friends="friends" @refreshConvo="getMessages(curConversation)" />
+        <CreateGroupForm v-else-if="action == 'createGroup'" />
+        <JoinGroupForm v-else-if="action == 'joinGroup'" />
+      </section>
     </section>
     <p v-else-if="loaded">No messages found</p>
     <p v-else>Loading...</p>
@@ -145,9 +137,10 @@ article {
 
 .row {
   display: flex;
+  flex-direction: row;
   justify-content: space-evenly;
   margin: 0 auto;
-  width: 30em;
+  width: 20em;
 }
 
 .column {

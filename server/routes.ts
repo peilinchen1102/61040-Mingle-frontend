@@ -215,6 +215,7 @@ class Routes {
   async sendMessage(session: WebSessionDoc, to: string, content: string) {
     const u1 = WebSession.getUser(session);
     const u2 = (await User.getUserByUsername(to))._id;
+    await Friend.isFriend(u1, u2);
     return (await Message.sendMessage(u1, u2, content)).msg;
   }
   @Router.get("/groups")

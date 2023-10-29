@@ -1,0 +1,72 @@
+<script setup lang="ts">
+import { fetchy } from "@/utils/fetchy";
+import { ref } from "vue";
+
+const props = defineProps(["friends"]);
+const emit = defineEmits(["refreshConvo"]);
+let to = ref("");
+let content = ref("");
+
+async function sendMessage(to: string, content: string) {
+  if (JSON.parse(JSON.stringify(props.friends)).includes(to)) {
+    try {
+      await fetchy(`/api/messages/${to}`, "POST", { body: { content } });
+    } catch (_) {
+      return;
+    }
+  } else {
+    try {
+      await fetchy(`/api/group/sendMsg/${to}`, "POST", { body: { content } });
+    } catch (e) {
+      return;
+    }
+  }
+
+  emptyForm();
+  emit("refreshConvo");
+}
+
+const emptyForm = () => {
+  to.value = "";
+  content.value = "";
+};
+</script>
+
+<template>
+  <form id="texting" @submit.prevent="sendMessage(to, content)" class="pure-form">
+    <div class="column" style="display: flex; align-items: flex-start">
+      <input class="textbox" type="text" v-model="to" placeholder="Username/Group Name" required />
+      <div>
+        <input class="textbox" style="width: 22em" type="text" v-model="content" placeholder="Send Message" required />
+        <button type="submit" class="pure-button pure-button-primary" style="background-color: black">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+            <path
+              d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"
+            ></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </form>
+</template>
+
+<style scoped>
+section {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+article {
+  background-color: var(--base-bg);
+  border-radius: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  padding: 1em;
+}
+
+.textbox {
+  width: 25em;
+}
+</style>
