@@ -2,7 +2,6 @@
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 import ProfileComponent from "../components/Profile/ProfileComponent.vue";
-
 const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
 </script>
 
