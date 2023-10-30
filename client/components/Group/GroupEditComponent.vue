@@ -3,6 +3,7 @@ import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
+import TaskInGroupComponent from "../Task/TaskInGroupComponent.vue";
 
 const props = defineProps(["groupName"]);
 const emit = defineEmits(["done"]);
@@ -54,26 +55,34 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div style="display: flex; align-items: center; flex-direction: column">
-    <section>
-      <h2>{{ props.groupName }}</h2>
-    </section>
-    <section v-if="loaded && group">
-      <section class="column">
-        <h2>Group Owner</h2>
-        {{ group.owner }}
+  <div style="display: flex; justify-content: space-around; align-items: flex-start; flex-direction: row">
+    <div style="display: flex; align-items: center; flex-direction: column">
+      <section>
+        <h2>{{ props.groupName }}</h2>
       </section>
-      <section class="column">
-        <h2>Group Members</h2>
-        <article v-for="member in group.members" :key="member" style="width: 10em" class="member">
-          {{ member }}
-          <button v-if="group.owner == currentUsername" class="button-error button-4 small" @click="removeMember(member)">Remove</button>
-        </article>
-        <button v-if="group.owner == currentUsername" class="button-4 button-error" @click="deleteGroup">Delete Group</button>
-        <button v-if="group.owner != currentUsername" class="button-4 button-error" @click="leaveGroup">Leave Group</button>
-        <button class="button-4 pure-button-primary" @click="emit('done')">Done</button>
+      <section v-if="loaded && group">
+        <section class="column">
+          <h2>Group Owner</h2>
+          {{ group.owner }}
+        </section>
+        <section class="column">
+          <h2>Group Members</h2>
+          <article v-for="member in group.members" :key="member" style="width: 10em" class="member">
+            {{ member }}
+            <button v-if="group.owner == currentUsername" class="button-error button-4 small" @click="removeMember(member)">Remove</button>
+          </article>
+          <button v-if="group.owner == currentUsername" class="button-4 button-error" @click="deleteGroup">Delete Group</button>
+          <button v-if="group.owner != currentUsername" class="button-4 button-error" @click="leaveGroup">Leave Group</button>
+          <button class="button-4 pure-button-primary" @click="emit('done')">Done</button>
+        </section>
       </section>
-    </section>
+      <p v-else-if="loaded">No group found</p>
+      <p v-else>Loading...</p>
+    </div>
+
+    <div v-if="loaded && group">
+      <TaskInGroupComponent :groupName="group.name" :members="group.members" />
+    </div>
     <p v-else-if="loaded">No group found</p>
     <p v-else>Loading...</p>
   </div>
