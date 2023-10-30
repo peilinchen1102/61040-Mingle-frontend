@@ -26,7 +26,7 @@ onBeforeMount(async () => {
 
 <template>
   <h2>Group Assigned Tasks</h2>
-  <div class="tasks" v-if="loaded && tasks && tasks.length !== 0">
+  <div class="tasks" v-if="loaded">
     <article v-for="task in tasks" :key="task._id">
       <p>Assigned: {{ task.assigned }}</p>
       <p>Task: {{ task.todo }}</p>
