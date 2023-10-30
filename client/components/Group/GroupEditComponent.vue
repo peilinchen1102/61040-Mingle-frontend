@@ -70,7 +70,7 @@ onBeforeMount(async () => {
           <button v-if="group.owner == currentUsername" class="button-error button-4 small" @click="removeMember(member)">Remove</button>
         </article>
         <button v-if="group.owner == currentUsername" class="button-4 button-error" @click="deleteGroup">Delete Group</button>
-        <button v-if="group.owner != currentUsername" class="button-4 pure-button-primary" @click="leaveGroup">Leave Group</button>
+        <button v-if="group.owner != currentUsername" class="button-4 button-error" @click="leaveGroup">Leave Group</button>
         <button class="button-4 pure-button-primary" @click="emit('done')">Done</button>
       </section>
     </section>

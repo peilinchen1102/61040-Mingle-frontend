@@ -95,6 +95,7 @@ onBeforeMount(async () => {
           <input type="radio" v-model="action" value="createGroup" />Create Group<br />
           <input type="radio" v-model="action" value="joinGroup" />Join Group
         </form>
+
         <SendMessageWithUsernameForm v-if="action == 'sendMessage'" :friends="friends" @refreshConvo="getMessages(curConversation)" />
         <CreateGroupForm v-else-if="action == 'createGroup'" />
         <JoinGroupForm v-else-if="action == 'joinGroup'" />
@@ -145,7 +146,7 @@ article {
 .column {
   display: flex;
   flex-direction: row;
-  gap: 50em;
+  gap: 70em;
 }
 
 .reverse {

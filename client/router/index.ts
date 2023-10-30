@@ -10,6 +10,7 @@ import MessagesView from "../views/MessagesView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 import ProfileView from "../views/ProfileView.vue";
 import SettingView from "../views/SettingView.vue";
+import StatusView from "../views/StatusView.vue";
 import TaskView from "../views/TaskView.vue";
 
 const router = createRouter({
@@ -34,6 +35,11 @@ const router = createRouter({
       path: "/messages",
       name: "Messages",
       component: MessagesView,
+    },
+    {
+      path: "/status",
+      name: "Status",
+      component: StatusView,
     },
     {
       path: "/tasks",
